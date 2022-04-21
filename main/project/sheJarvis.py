@@ -3,9 +3,11 @@ import speech_recognition as sr
 import webbrowser
 import datetime
 import wikipedia
+import requests
 
-
-
+with open('weather.txt')as f1:
+	API = f1.read()
+PATH = "http://api.openweathermap.org/data/2.5/weather?"
 def takeCommand():
 
 	r = sr.Recognizer()
@@ -82,7 +84,20 @@ def Hello():
 	# take query
 	speak("hello sir I am your desktop Tell me how may I help you")
 
+def tellweather(city):
 
+	PARAMS = {
+		"q": city,
+		"appid": API,
+	}
+
+	respon = requests.get(PATH, PARAMS)
+	makeit = respon.json()
+	tempindegree = int(makeit['main']['temp'] - 273.15)
+	windspeed = makeit['wind']['speed']
+	discription = makeit['weather'][0]['description']
+	speak(f"The city {city} have {tempindegree} Temparature of wind speed {windspeed}, "
+							  f"having quit {discription}")
 def Take_query():
 
 	
@@ -109,10 +124,6 @@ def Take_query():
 		elif "which day it is" in query:
 			tellDay()
 			continue
-		
-                elif "what day is today" in query:
-			tellDay()
-			continue
 
                 elif "what is the time" in query:
 			tellTime()
@@ -121,7 +132,13 @@ def Take_query():
 			tellTime()
 			continue
 		
-		
+		elif "weather" in query:
+			try:
+				speak("name the city or country")
+				city = takeCommand().lower()
+				tellweather(city)
+			except:
+				speak("oops something wrong say again")
 		elif "bye" in query:
 			speak("Bye for now")
 			exit()
