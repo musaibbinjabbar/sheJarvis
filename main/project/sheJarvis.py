@@ -1,36 +1,15 @@
+
 import pyttsx3
-import speech_recognition as sr
+import requests
 import webbrowser
 import datetime
 import wikipedia
 
-
+PATH = "http://api.openweathermap.org/data/2.5/weather?"
 
 def takeCommand():
 
-	r = sr.Recognizer()
-
-
-	with sr.Microphone() as source:
-		print('Listening...')
-		
-
-		r.pause_threshold = 0.7
-		audio = r.listen(source)
-		
-	
-		try:
-			print("Recognizing...")
-			
-			
-			Query = r.recognize_google(audio, language='en-in')
-			print("you said :", Query)
-			
-		except Exception as e:
-			print(e)
-			print("Sorry...Say that again sir")
-			return "None"
-		
+		Query = input("what ")
 		return Query
 
 def speak(audio):
@@ -82,6 +61,21 @@ def Hello():
 	# take query
 	speak("hello sir I am your desktop Tell me how may I help you")
 
+def tellweather(city):
+
+	PARAMS = {
+		"q": city,
+		"appid": '2f90e3a992aebf5c57c2e7c116933ce6',
+	}
+
+	respon = requests.get(PATH, PARAMS)
+	makeit = respon.json()
+	tempindegree = int(makeit['main']['temp'] - 273.15)
+	windspeed = makeit['wind']['speed']
+	discription = makeit['weather'][0]['description']
+	speak(f"The city {city} have {tempindegree} Temparature of wind speed {windspeed}, "
+							  f"having quit {discription}")
+
 
 def Take_query():
 
@@ -110,17 +104,17 @@ def Take_query():
 			tellDay()
 			continue
 		
-                elif "what day is today" in query:
-			tellDay()
-			continue
 
-                elif "what is the time" in query:
-			tellTime()
+                
 			continue
 		elif "tell me the time" in query:
 			tellTime()
 			continue
-		
+		elif "weather" in query:
+			speak("which city sir ")
+			print("which city sir ")
+			city = input()
+			tellweather(city)
 		
 		elif "bye" in query:
 			speak("Bye for now")
