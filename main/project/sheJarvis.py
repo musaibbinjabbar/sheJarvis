@@ -79,21 +79,6 @@ def tellDay():
                 print(day_of_the_week)
                 speak("The day is " + day_of_the_week)
 
-def tellWeather(city):
-        API = "weather.txt"            #vikd03c60fef0f5305a7f0238a134c4ccd2bha
-        PATH = "http://api.openweathermap.org/data/2.5/weather?"
-        PARAMS = {
-                "q": city,
-                "appid": API,
-        }
-        respond = reuests.get(PATH, PARAMS)
-        makeit = respond.json()
-        tempindegree = int(makeit['main']['temp']-273.15)
-        windspeed = makeit['wind']['speed']
-        description = makeit['weather'][0]['description']
-        print(f"the city {city} have {tempindegree} temperature and wind speed is {windspeed}, "
-                                                        f"having quite {description}") 
-        speak("the city " + city + "have" + tempindegree + "temperature and wind speed is " + windspeed + "having quite" + description)
 
 
 
@@ -168,7 +153,7 @@ def Take_query():
 
                 
                 elif "weather" in query or "temperature" in query:
-                        key = "d03c60fef0f5305a7f0238a134c4ccd2"
+                        key = "weather.txt"
                         weather_url = "http://api.openweathermap.org/data/2.5/weather?"
                         ind = query.split().index("in")
                         location = query.split()[ind + 1:]
