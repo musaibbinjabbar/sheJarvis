@@ -14,7 +14,8 @@ import pandas as pd
 from countryinfo import CountryInfo
 from PyDictionary import PyDictionary
 import randfacts
-
+import time
+import smtplib
 
 # this method is for taking the commands
 # and recognizing the command from the
@@ -121,6 +122,15 @@ def tellTomorrow():
                 print(day_of_the_week)
                 speak("Tomorrow is " + day_of_the_week)
 
+def sendEmail(to,content):
+        server = smtplib.SMTP('smtp.gmail.com',587)
+        server.ehlo()
+        server.starttls()
+        server.login('mailforproject3@gmail.com','projectmailpswd.txt')
+        server.sendmail('mailforproject3@gmail.com',to,content)
+        server.close()
+
+        
 def screenshot():
     img = pyautogui.screenshot()
     img.save(r'C:\\Users\\DELL\\Pictures\\Screenshots\\screenshot_by_jarvis.png')
@@ -217,6 +227,7 @@ def Take_query():
                         
                         fav_dir = "C:\\Users\\DELL\\Music\\fav_dir"
                         rand = random.choice(os.listdir(fav_dir))
+                        #songs = os.listdir(fav_dir)
                         speak("opening music")
                         os.startfile(os.path.join(fav_dir,rand))
 
@@ -245,6 +256,8 @@ def Take_query():
                 elif "bye" in query or "exit" in query or "quit" in query:
                         speak("Bye, have a nice day ")
                         exit()
+
+                
                 
                 elif "from wikipedia" in query:
                         
@@ -264,7 +277,7 @@ def Take_query():
                                'country=in&'
                                'category=general&'
                                'pageSize=5&'
-                               'apiKey=apikeyhere')
+                               'apiKey=apikey here')
                         try:
                                 response = requests.get(url)
                         except:
@@ -302,6 +315,28 @@ def Take_query():
                         except TypeError:
                                 print("no results found")
                                 speak("no results found")
+                                
+                elif "email to nitin" in query or "mail to nitin" in query:
+                        try:
+                                speak("what message should I send?")
+                                content = takeCommand()
+                                to = "nitin22092001@gmail.com"
+                                sendEmail(to,content)
+                                speak("email sent successfully")
+                        except Exception as e:
+                                print(e)
+                                speak("sorry ,something went wrong")
+
+                elif "email to bhavik" in query or "mail to bhavik" in query:
+                        try:
+                                speak("what message should I send?")
+                                content = takeCommand()
+                                to = "bhavikjain2888@gmail.com"
+                                sendEmail(to,content)
+                                speak("email sent successfully")
+                        except Exception as e:
+                                print(e)
+                                speak("sorry ,something went wrong")
 
                 elif "fact" in query or "facts" in query:
                         x = randfacts.get_fact()
@@ -309,7 +344,7 @@ def Take_query():
                         speak(x)
                                                 
                 elif "calculate" in query:
-                        app_id = "appid"
+                        app_id = "app_id here"
                         client = wolframalpha.Client(app_id)
                         ind = query.lower().split().index("calculate")
                         text = query.split()[ind + 1:]
@@ -322,7 +357,7 @@ def Take_query():
                 elif "what is" in query or "who is" in query:
                     try:
                         
-                        app_id = "appid"
+                        app_id = "app_id here"
                         client = wolframalpha.Client(app_id)
                         ind = query.split().index("is")
                         text = query.split()[ind + 1:]
