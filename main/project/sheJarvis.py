@@ -257,7 +257,19 @@ def Take_query():
                         speak("Bye, have a nice day ")
                         exit()
 
-                
+                # this will remember whatever you tell to remember
+                elif "remember that" in query:
+                        rememberMsg = query.replace("remember that","")
+                        rememberMsg = rememberMsg.replace("jarvis","")
+                        speak("you told me to remember that " +rememberMsg)
+                        remember = open('data.txt','w')
+                        remember.write(rememberMsg)
+                        remember.close()
+
+                # this will be called whenever to read what was been told to remember
+                elif "what do you remember" in query or "told you to remember" in query or "tell you to remember" in query:
+                        remember = open('data.txt','r')
+                        speak("you told me to remember that " +remember.read())
                 
                 elif "from wikipedia" in query:
                         
