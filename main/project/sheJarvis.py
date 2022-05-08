@@ -14,8 +14,9 @@ import pandas as pd
 from countryinfo import CountryInfo
 from PyDictionary import PyDictionary
 import randfacts
-import time
 import smtplib
+import winsound # to make the beep sound
+from win10toast import ToastNotifier #to show windows 10 notifications
 
 # this method is for taking the commands
 # and recognizing the command from the
@@ -154,7 +155,15 @@ def Hello():
         # This function is for when the assistant
         # is called it will say hello and then
         # take query
-        speak("Hello I am shee jarvis")
+        hour = int(datetime.datetime.now().hour)
+        if hour >= 0 and hour < 12:
+                speak("good morning")
+        elif hour >= 12 and hour < 17:
+                speak("good afternoon")
+        else:
+                speak("good evening")
+                
+        speak("I am shee jarvis, how may I help you?")
 
 
 def Take_query():
@@ -256,7 +265,25 @@ def Take_query():
                 elif "bye" in query or "exit" in query or "quit" in query:
                         speak("Bye, have a nice day ")
                         exit()
-
+                        
+                #reminder or alarm function
+                elif "alarm" in query or "remind" in query or "reminder" in query:
+                        try:
+                                speak("What should I remind you of?")
+                                sub = takeCommand()
+                                print("alarm for subject : " +sub)
+                                speak("In how much seconds I should remind you?")
+                                sec = takeCommand()
+                                print("I will remind you in " +sec+ " seconds")
+                                speak("I will remind you in " +sec+ " seconds")
+                                timer(sub,sec)
+                                print("Alarm went off")
+                                speak("Alarm went off")
+                        except Exception as e:
+                                print(e)
+                                print("sorry, something went wrong")
+                                speak("sorry, something went wrong")
+                                
                 # this will remember whatever you tell to remember
                 elif "remember that" in query:
                         rememberMsg = query.replace("remember that","")
