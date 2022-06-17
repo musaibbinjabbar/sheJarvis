@@ -1,29 +1,27 @@
-from kivy.lang import Builder
+from kivy.lang import Builder                               # GUI
 from kivymd.app import MDApp
-import pyttsx3
-import speech_recognition as sr
-import webbrowser
-import datetime
-import os
+import pyttsx3                                              # to convert text to speech
+import speech_recognition as sr                             # to recognize our speech
+import webbrowser                                           # to interact with web browser
+import datetime                                             # to show date and time
+import os                                                   # OS related functions
 import random
-import wikipedia
-import pyautogui
-import requests
-import json
-import pyjokes
-import wolframalpha
-from countryinfo import CountryInfo
-from PyDictionary import PyDictionary
-import randfacts
-import smtplib
-import winsound  # to make the beep sound
-from win10toast import ToastNotifier  # to show windows 10 notifications
+import wikipedia                                            # to fetch info from wikipedia
+import pyautogui                                            # to take screenshot
+import requests                                             # to execute functions using OS
+import json                                                 # api handling purposes
+import pyjokes                                              # to tell random python jokes
+import wolframalpha                                         # interact with wolframalpha
+from countryinfo import CountryInfo                         # to get country's capital and all
+from PyDictionary import PyDictionary                       # to show meaning of words
+import randfacts                                            # to show random facts
+import smtplib                                              # email related functions
+import winsound                                             # to make the beep sound
+from win10toast import ToastNotifier                        # to show Windows 10 notifications
 
 
-# this method is for taking the commands
-# and recognizing the command from the
-# speech_Recognition module we will use
-# the recongizer method for recognizing
+# this method is for taking the commands speech_Recognition module
+# we will use the Recognizer
 def takeCommand():
     r = sr.Recognizer()
 
@@ -40,8 +38,6 @@ def takeCommand():
 
         # Now we will be using the try and catch
         # method so that if sound is recognized
-        # it is good else we will have exception
-        # handling
         try:
             print("Recognizing...")
             Query = r.recognize_google(audio, language='en-in')
@@ -49,7 +45,7 @@ def takeCommand():
 
         except Exception as e:
             print(e)
-            print("Say that again sir")
+            print("Press mic button and Say that again sir")
             return "None"
 
         return Query
@@ -61,17 +57,16 @@ def speak(audio):
     # of engine property)
     voices = engine.getProperty('voices')
 
-    # setter method .[0]=male voice and
-    # [1]=female voice in set Property.
+    # [0]=female voice in set Property.
     engine.setProperty('voice', voices[0].id)
 
-    # Method for the speaking of the the assistant
+    # Method for the speaking of the assistant
     engine.say(audio)
 
-    # Blocks while processing all the currently
-    # queued commands
+    # Blocks while processing all the queued commands
     engine.runAndWait()
 
+# this function is to set alarm / reminder
 def timer(sub, sec):
     noti = ToastNotifier()
     noti.show_toast("Reminder By sheJarvis", f"""Alarm will go off in {sec} seconds""", duration=20)
@@ -80,9 +75,9 @@ def timer(sub, sec):
     duration = 1000
     winsound.Beep(frequency, duration)
 
+# This function is for telling the day of the week
 def tellToday():
-    # This function is for telling the
-    # day of the week
+
     day = datetime.datetime.today().weekday() + 1
 
     # this line tells us about the number
@@ -125,7 +120,7 @@ def tellTomorrow():
         day_of_the_week = Day_dict[day]
         return day_of_the_week
 
-"""
+
 def sendEmail(to, content):
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.ehlo()
@@ -133,7 +128,7 @@ def sendEmail(to, content):
     server.login('mailforproject3@gmail.com', 'projectmailpswd.txt')
     server.sendmail('mailforproject3@gmail.com', to, content)
     server.close()
-"""
+
 
 def screenshot():
     img = pyautogui.screenshot()
@@ -182,6 +177,7 @@ MDRelativeLayout:
             Rectangle:
                 pos: 335,560
                 size: 500,20
+                
     MDLabel:
         id: n
         text: "AI wrote here."
@@ -204,11 +200,12 @@ MDRelativeLayout:
         self.kv.ids.n.text = "Loading..."
         self.kv.ids.aa.text = "Press mic button and speak"
         self.kv.ids.button.bind(on_press=self.call)
+
         return self.kv
 
     Hello()
     def call(self, event):
-        speak("Hello sir, Tell me how may I help you?")
+        speak("Hello sir, how may I help you?")
 
         self.kv.ids.aa.text = "Hello sir, I am your desktop assistant Tell me how may I help you?"
 
@@ -221,15 +218,16 @@ MDRelativeLayout:
         if "open youtube" in query:
             speak("Opening YouTube ")
 
-            # in the open method we just to give the link
-            # of the website and it automatically open
-            # it in your default browser
+            # in the open method we just have to give the link
+            # of the website and it will open in default browser
             webbrowser.open("www.youtube.com")
             self.kv.ids.n.text = "YouTube is open"
+
         elif "open facebook" in query:
             speak("Opening Facebook")
             webbrowser.open("www.facebook.com")
-            self.kv.ids.n.text = "facebook is open"
+            self.kv.ids.n.text = "Facebook is open"
+
         elif "open instagram" in query:
             speak("Opening Instagram")
             webbrowser.open("www.instagram.com")
@@ -239,18 +237,22 @@ MDRelativeLayout:
             speak("Opening Twitter")
             webbrowser.open("www.twitter.com")
             self.kv.ids.n.text = "Twitter is open"
+
         elif "open github" in query:
             speak("Opening GitHub")
             webbrowser.open("www.github.com")
             self.kv.ids.n.text = "github is open"
+
         elif "open stackoverflow" in query or "open stack overflow" in query or "open stack over flow" in query:
             speak("Opening stackoverflow")
             webbrowser.open("www.stackoverflow.com")
             self.kv.ids.n.text = "stackoverflow is open"
+
         elif "screenshot" in query or "screen shot" in query:
             speak("taking screenshot")
             screenshot()
-            self.kv.ids.n.text = "Screenshot saved"
+            self.kv.ids.n.text = "Screenshot saved here C://Users//DELL//Pictures//Screenshots"
+
         elif "open google" in query:
             speak("Opening Google ")
             webbrowser.open("www.google.com")
@@ -279,7 +281,7 @@ MDRelativeLayout:
             self.kv.ids.n.text = "The time is " + hour + " Hours and " + min + " Minutes"
             """
 
-        elif "play music" in query or "play songs" in query or "play song" in query:
+        elif "play music" in query or "play songs" in query or "play song" in query or "random song" in query:
 
             fav_dir = "C:\\Users\\DELL\\Music\\fav_dir"
             rand = random.choice(os.listdir(fav_dir))
@@ -311,25 +313,24 @@ MDRelativeLayout:
                                      + str(desc)
                 speak(weather_response)
             else:
-                speak("city not found")
+                speak("no results found")
+                self.kv.ids.n.text = "no results found"
 
         # this will exit and terminate the program
         elif "bye" in query or "exit" in query or "quit" in query:
-            speak("Bye, have a nice day ")
-            self.kv.ids.n.text="Bye, have a nice day"
+            speak("Bye, have a nice day")
+            self.kv.ids.n.text = "Bye, have a nice day"
             exit()
 
-        # reminder or alarm function
+        # reminder / alarm function
         elif "alarm" in query or "remind" in query or "reminder" in query:
             try:
                 speak("What should I remind you of?")
                 sub = takeCommand()
                 print("alarm for subject : " + sub)
-                #self.kv.ids.n.text = "alarm for subject : " + sub
                 speak("In how much seconds I should remind you?")
                 sec = takeCommand()
                 print("I will remind you in " + sec + " seconds")
-                #self.kv.ids.n.text = "I will remind you in " + sec + " seconds"
                 speak("I will remind you in " + sec + " seconds")
                 timer(sub, sec)
                 print("Alarm went off")
@@ -353,7 +354,7 @@ MDRelativeLayout:
             remember.write(rememberMsg)
             remember.close()
 
-        # this will be called whenever to read what was been told to remember
+        # this will be called whenever to read what has been told to remember
         elif "what do you remember" in query or "told you to remember" in query or "tell you to remember" in query:
             try:
                 remember = open('data.txt', 'r')
@@ -369,14 +370,14 @@ MDRelativeLayout:
             speak("Checking the wikipedia ")
             query = query.replace("wikipedia", "")
 
-            # it will give the summary of 3 lines from
+            # it will give the summary of 3 lines from wikipedia
 
             result = wikipedia.summary(query, sentences=3)
             self.kv.ids.n.text = "according to wikipedia " + result
             speak("According to wikipedia")
             speak(result)
 
-
+        #get news
         elif "news" in query:
 
             key = {"api-key": "yjGaBu8APLGlfbcXg5amsNOoeO3HMDya"}
@@ -420,7 +421,6 @@ MDRelativeLayout:
                 text = listToString(query.split()[ind + 1:])
                 dic = PyDictionary()
                 word = dic.meaning(text)
-                # print(len(word))
 
                 for state in word:
                     print(word[state])
@@ -430,7 +430,7 @@ MDRelativeLayout:
                 print("no results found")
                 self.kv.ids.n.text = "no results found"
                 speak("no results found")
-"""
+
         elif "email to nitin" in query or "mail to nitin" in query:
             try:
                 speak("what message should I send?")
@@ -452,7 +452,7 @@ MDRelativeLayout:
             except Exception as e:
                 print(e)
                 speak("sorry ,something went wrong")
-"""
+
         elif "fact" in query or "facts" in query:
             x = randfacts.get_fact()
             print(x)
@@ -526,7 +526,7 @@ MDRelativeLayout:
             speak(fu)
 
         elif "how are you" in query or "how do you do" in query:
-            speak("i am fine , how do you do")
+            speak("i am fine , how do you do?")
             self.kv.ids.n.text="i am fine , how do you do?"
 
         elif "where is" in query:
@@ -536,6 +536,18 @@ MDRelativeLayout:
             speak("this is where" + listToString(location) + "is")
             self.kv.ids.n.text = "this is where " + listToString(location) + " is "
             webbrowser.open(url)
+
+        elif "how to" in query:
+            ind = query.lower().split().index("to")
+            text = listToString(query.split()[ind + 1:])
+            url = "https://www.youtube.com/results?search_query=" + "".join(text)
+            speak("this is what i found on youtube")
+            self.kv.ids.n.text = "opening youtube"
+            webbrowser.open(url)
+
+        elif "who made you" in query or "who created you" in query:
+            self.kv.ids.n.text = "I was created by Bhavik, Nitin and Musaib"
+            speak("I was created by Bhavik, Nitin and Musaib")
 
         elif "tell me your name" in query or "who are you" in query:
             speak("I am shee Jarvis. Your desktop Assistant")
