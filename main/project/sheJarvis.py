@@ -1,5 +1,6 @@
 from kivy.lang import Builder                               # GUI
 from kivymd.app import MDApp
+from kivymd.uix.button import MDIconButton
 import pyttsx3                                              # to convert text to speech
 import speech_recognition as sr                             # to recognize our speech
 import webbrowser                                           # to interact with web browser
@@ -57,9 +58,8 @@ def speak(audio):
     # of engine property)
     voices = engine.getProperty('voices')
 
-    # [0]=female voice in set Property.
-    engine.setProperty('voice', voices[0].id)
-
+    # [1]=male voice in set Property.
+    engine.setProperty('voice', voices[1].id)
     # Method for the speaking of the assistant
     engine.say(audio)
 
@@ -69,8 +69,8 @@ def speak(audio):
 # this function is to set alarm / reminder
 def timer(sub, sec):
     noti = ToastNotifier()
-    noti.show_toast("Reminder By sheJarvis", f"""Alarm will go off in {sec} seconds""", duration=20)
-    noti.show_toast(f"Reminder By sheJarvis", sub, duration=20)
+    noti.show_toast("Reminder By Adam", f"""Alarm will go off in {sec} seconds""", duration=20)
+    noti.show_toast(f"Reminder By Adam", sub, duration=20)
     frequency = 2500
     duration = 1000
     winsound.Beep(frequency, duration)
@@ -132,7 +132,7 @@ def sendEmail(to, content):
 
 def screenshot():
     img = pyautogui.screenshot()
-    img.save(r'C:\\Users\\DELL\\Pictures\\Screenshots\\screenshot_by_jarvis.png')
+    img.save(r'C:\\Users\\DELL\\Pictures\\Screenshots\\screenshot_by_adam.png')
 
 
 def tellTime():
@@ -156,7 +156,7 @@ def Hello():
     else:
         speak("good evening")
 
-    #speak("I am shee jarvis, how may I help you?")
+    #speak("I am shee Adam, how may I help you?")
 
 class SheJarvis(MDApp):
     def __init__(self, **kwargs):
@@ -166,6 +166,21 @@ class SheJarvis(MDApp):
 #:kivy 2.0.0
 MDRelativeLayout:
     id: box
+    Image:
+        source: 'la.jpg'
+        #opacity:0.5
+        opacity:0.8
+        pos:0,130
+        allow_stretch:True
+        keep_ratio:True
+    Image:
+        source: 'laa.png'
+        size_hint_x:0.4
+        #opacity:0.6
+        opacity:0.8
+        allow_stretch:True
+        keep_ratio:True
+        pos:220,0
     MDLabel:
         id: aa
         text: "User wrote here."
@@ -271,25 +286,18 @@ MDRelativeLayout:
 
         elif "tell me the time" in query or "what is the time" in query or "what time is it" in query:
             vari = tellTime()
-            """
-            self.kv.ids.n.text = " " + vari
-            time = str(datetime.datetime.now())
-            print(time)
-            hour = time[11:13]
-            min = time[14:16]
-            speak("The time is " + hour + "Hours and" + min + "Minutes")
-            self.kv.ids.n.text = "The time is " + hour + " Hours and " + min + " Minutes"
-            """
 
-        elif "play music" in query or "play songs" in query or "play song" in query or "random song" in query:
+        # play songs available in the system
+        elif "play music" in query or "play songs" in query or "play a song" in query or "random song" in query or \
+                "start music" in query:
 
             fav_dir = "C:\\Users\\DELL\\Music\\fav_dir"
             rand = random.choice(os.listdir(fav_dir))
-            # songs = os.listdir(fav_dir)
             speak("opening music")
+            self.kv.ids.n.text = "opening music"
             os.startfile(os.path.join(fav_dir, rand))
 
-
+        # temperature/weather of any city
         elif "weather" in query or "temperature" in query:
             global str
             key = "d03c60fef0f5305a7f0238a134c4ccd2"
@@ -347,14 +355,14 @@ MDRelativeLayout:
         # this will remember whatever you tell to remember
         elif "remember that" in query:
             rememberMsg = query.replace("remember that", "")
-            rememberMsg = rememberMsg.replace("jarvis", "")
+            rememberMsg = rememberMsg.replace("adam", "")
             speak("you told me to remember that " + rememberMsg)
             self.kv.ids.n.text = "you told me to remember that " + rememberMsg
             remember = open('data.txt', 'w')
             remember.write(rememberMsg)
             remember.close()
 
-        # this will be called whenever to read what has been told to remember
+        # this will be called to read what has been told to remember
         elif "what do you remember" in query or "told you to remember" in query or "tell you to remember" in query:
             try:
                 remember = open('data.txt', 'r')
@@ -460,15 +468,20 @@ MDRelativeLayout:
             speak(x)
 
         elif "calculate" in query:
-            app_id = "WERGAU-94V8K5KH28"
-            client = wolframalpha.Client(app_id)
-            ind = query.lower().split().index("calculate")
-            text = query.split()[ind + 1:]
-            res = client.query("".join(text))
-            answer = next(res.results).text
-            print("ths answer is " + answer)
-            self.kv.ids.n.text = ("ths answer is " + answer)
-            speak("the answer is " + answer)
+            try:
+                app_id = "WERGAU-94V8K5KH28"
+                client = wolframalpha.Client(app_id)
+                ind = query.lower().split().index("calculate")
+                text = query.split()[ind + 1:]
+                res = client.query("".join(text))
+                answer = next(res.results).text
+                print("ths answer is " + answer)
+                self.kv.ids.n.text = ("ths answer is " + answer)
+                speak("the answer is " + answer)
+            except StopIteration:
+                print("no results found")
+                self.kv.ids.n.text = "no results found"
+                speak("no results found")
 
 
         elif "what is" in query or "who is" in query:
@@ -550,8 +563,8 @@ MDRelativeLayout:
             speak("I was created by Bhavik, Nitin and Musaib")
 
         elif "tell me your name" in query or "who are you" in query:
-            speak("I am shee Jarvis. Your desktop Assistant")
-            self.kv.ids.n.text = "I am sheJarvis. Your desktop Assistant"
+            speak("I am Adam. Your desktop Assistant")
+            self.kv.ids.n.text = "I am Adam. Your desktop Assistant"
 
 
 if __name__ == '__main__':
