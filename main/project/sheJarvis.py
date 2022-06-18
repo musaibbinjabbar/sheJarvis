@@ -156,11 +156,12 @@ def Hello():
     else:
         speak("good evening")
 
-    #speak("I am shee Adam, how may I help you?")
+    #speak("I am Adam, how may I help you?")
 
 class SheJarvis(MDApp):
     def __init__(self, **kwargs):
         super(SheJarvis, self).__init__(**kwargs)
+        self.title = "Adam"
         self.theme_cls.theme_style = "Dark"
         self.kv = Builder.load_string('''
 #:kivy 2.0.0
@@ -168,16 +169,14 @@ MDRelativeLayout:
     id: box
     Image:
         source: 'la.jpg'
-        #opacity:0.5
-        opacity:0.8
+        opacity:0.5
         pos:0,130
         allow_stretch:True
         keep_ratio:True
     Image:
         source: 'laa.png'
         size_hint_x:0.4
-        #opacity:0.6
-        opacity:0.8
+        opacity:0.6
         allow_stretch:True
         keep_ratio:True
         pos:220,0
@@ -562,7 +561,7 @@ MDRelativeLayout:
             self.kv.ids.n.text = "I was created by Bhavik, Nitin and Musaib"
             speak("I was created by Bhavik, Nitin and Musaib")
 
-        elif "tell me your name" in query or "who are you" in query:
+        elif "tell me your name" in query or "who are you" in query or "what is your name" in query:
             speak("I am Adam. Your desktop Assistant")
             self.kv.ids.n.text = "I am Adam. Your desktop Assistant"
 
